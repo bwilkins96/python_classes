@@ -11,7 +11,8 @@ class LinkedList:
     def __init__(self):
         self.head = Node('head')
         self.tail = self.head
-        self.nodes = {}
+        self.nodes = defaultdict(set)
+        self.size = 0
 
     def add(self, val):
         node = Node(val)
@@ -19,11 +20,26 @@ class LinkedList:
         self.tail.next = node
         self.tail = node
 
-        self.nodes[val] = node
+        self.nodes[val].add(node)
+        self.size += 1
     
-    def remove(self, val):
-        node = self.get(val)
+    def addFront(self, val):
+        if self.empty():
+            self.add(val)
+            return
+        
+        node = Node(val)
+        node.next = self.head.next
+        self.head.next = node
+        node.prev = self.head
 
+        if node.next:
+            node.next.prev = node
+
+        self.nodes[val].add(node)
+        self.size += 1
+    
+    def _remove(self, node):
         if node is None:
             return
         
@@ -37,7 +53,21 @@ class LinkedList:
         
         node.next = None
         node.prev = None
-        self.nodes.pop(val)
+        self.nodes[node.val].remove(node)
+        self.size -= 1
+
+    def remove(self, node):
+        self._remove(node)
+       
+    def removeHead(self):
+        head = self.getHead()
+        self._remove(head)
+        return head
+    
+    def removeTail(self):
+        tail = self.getTail()
+        self._remove(tail)
+        return tail
 
     def empty(self):
         return self.head.next is None
@@ -76,7 +106,7 @@ class LinkedList:
         return nodes
     
     def __len__(self):
-        return len(self.nodes)
+        return self.size
     
     def __repr__(self):
         return str(self.nodes)
