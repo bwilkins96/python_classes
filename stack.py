@@ -16,3 +16,6 @@ class Stack:
     
     def __repr__(self):
         return f'bottom - {self.data} - top'
+    
+    def __len__(self):
+        return len(self.data)
