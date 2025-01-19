@@ -11,6 +11,9 @@ class MinHeap:
     def pop(self):
         return heapq.heappop(self.data)
     
+    def peek(self):        
+        return self.data[0]
+    
     def __repr__(self):
         return str(self.data)
     
